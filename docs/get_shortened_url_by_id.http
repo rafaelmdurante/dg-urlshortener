@@ -1,0 +1,5 @@
+### GET /:code - get shortened url by id [invalid id]
+GET {{host}}/{{invalid_id}}
+
+### GET /:code - get shortened url by id [valid id]
+GET {{host}}/{{valid_id}}
