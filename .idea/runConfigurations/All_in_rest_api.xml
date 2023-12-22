@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="All in rest-api" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" editBeforeRun="true" focusToolWindowBeforeRun="true" singleton="false" path="$APPLICATION_CONFIG_DIR$/scratches/rest-api.http" index="2" requestIdentifier="POST / - create new short url#1">
+    <method v="2" />
+  </configuration>
+</component>
