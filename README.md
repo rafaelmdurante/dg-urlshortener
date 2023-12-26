@@ -2,7 +2,7 @@
 
 My solution for the [DevGym][devgym]'s URL Shortener challenge.
 
-## Requesites
+## Requisites
 
 In this challenge you must create a server to shorten URL and redirect short 
 URLs to their original link.
