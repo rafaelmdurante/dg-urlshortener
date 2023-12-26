@@ -6,5 +6,5 @@ import (
 
 func SetRoutes(g *gin.Engine) {
 	g.POST("/", CreateShortURL)
-	//g.GET("/", )
+	g.GET("/:code", RedirectToTargetURL)
 }

@@ -2,6 +2,8 @@ package shorturl
 
 import (
 	"context"
+	"errors"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rafaelmdurante/devgym-urlshortener/internal"
 )
@@ -9,6 +11,7 @@ import (
 type Repository interface {
 	Insert(ctx context.Context, shortURL internal.ShortenedURL) (internal.ShortenedURL, error)
 	UpdateURLCode(ctx context.Context, shortURL internal.ShortenedURL) (internal.ShortenedURL, error)
+	FindOneByID(ctx context.Context, id int) (internal.ShortenedURL, error)
 }
 
 type RepositoryPostgres struct {
@@ -39,6 +42,25 @@ func (r *RepositoryPostgres) UpdateURLCode(ctx context.Context, u internal.Short
 
 	if err != nil {
 		return internal.ShortenedURL{}, nil
+	}
+
+	return u, nil
+}
+
+func (r *RepositoryPostgres) FindOneByID(ctx context.Context, id int) (internal.ShortenedURL, error) {
+	u := internal.ShortenedURL{}
+	err := r.Conn.QueryRow(
+		ctx,
+		"SELECT id, target_url FROM short_url WHERE id = $1",
+		id,
+	).Scan(&u.ID, &u.TargetURL)
+
+	if errors.Is(err, pgx.ErrNoRows) {
+		return internal.ShortenedURL{}, ErrURLNotFound
+	}
+
+	if err != nil {
+		return internal.ShortenedURL{}, err
 	}
 
 	return u, nil

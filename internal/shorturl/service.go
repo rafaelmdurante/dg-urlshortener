@@ -4,10 +4,16 @@ import (
 	"context"
 	"errors"
 	"github.com/rafaelmdurante/devgym-urlshortener/internal"
+	"github.com/rafaelmdurante/devgym-urlshortener/internal/base62"
 )
 
-var ErrTargetURLEmpty = errors.New("target url cannot be empty")
-var ErrShortURLAlreadyExists = errors.New("shortened url already exists for id")
+var (
+	ErrTargetURLEmpty        = errors.New("target url cannot be empty")
+	ErrShortURLAlreadyExists = errors.New("shortened url already exists for id")
+	ErrInvalidURLCode        = errors.New("invalid url code")
+	ErrCodeIsEmpty           = errors.New("code is empty")
+	ErrURLNotFound           = errors.New("url not found")
+)
 
 type Service struct {
 	Repository Repository
@@ -36,4 +42,20 @@ func (s Service) Create(ctx context.Context, u internal.ShortenedURL) (internal.
 
 	// updates the empty url_code from step above
 	return s.Repository.UpdateURLCode(ctx, r.EncodeURL(r.ID))
+}
+
+func (s Service) FindOneByCode(ctx context.Context, code string) (internal.ShortenedURL, error) {
+	if code == "" {
+		return internal.ShortenedURL{}, ErrCodeIsEmpty
+	}
+
+	id := base62.Decode(code)
+
+	u, err := s.Repository.FindOneByID(ctx, id)
+
+	if err != nil {
+		return internal.ShortenedURL{}, err
+	}
+
+	return u, nil
 }

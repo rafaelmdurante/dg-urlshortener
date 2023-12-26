@@ -14,7 +14,9 @@ type ShortenedURL struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-var ErrTargetURLInvalid = errors.New("target url is not valid")
+var (
+	ErrTargetURLInvalid = errors.New("target url is not valid")
+)
 
 func (u *ShortenedURL) IsURLValid() (bool, error) {
 	_, err := url.ParseRequestURI(u.TargetURL)

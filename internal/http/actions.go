@@ -44,3 +44,28 @@ func CreateShortURL(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusCreated, response)
 }
+
+func RedirectToTargetURL(ctx *gin.Context) {
+	code := ctx.Param("code")
+
+	if code == "" {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"error": shorturl.ErrInvalidURLCode,
+		})
+	}
+
+	// get shortened url
+	url, err := service.FindOneByCode(ctx, code)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+
+		return
+	}
+
+	//
+	//ctx.JSON(http.StatusPermanentRedirect, gin.H{
+	//	// return redirection to target url
+	//	"Location": url.TargetURL,
+	//})
+	ctx.Redirect(http.StatusMovedPermanently, url.TargetURL)
+}
