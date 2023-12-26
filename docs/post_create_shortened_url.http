@@ -3,7 +3,7 @@ POST {{host}}/
 Content-Type: application/json
 
 {
-  "target_url": "http://www.google.com"
+  "target_url": "https://www.devgym.com.br"
 }
 
 ### POST / - create new short url [invalid target url]
