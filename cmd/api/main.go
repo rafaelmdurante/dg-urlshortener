@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	ctx := context.Background() // why background?
+	ctx := context.Background()
 
 	connectionURI := "postgresql://postgres:postgres@db:5432/urlshortener"
 	conn, err := database.NewConnection(ctx, connectionURI)
