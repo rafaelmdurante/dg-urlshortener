@@ -6,6 +6,14 @@ Content-Type: application/json
   "target_url": "https://www.devgym.com.br"
 }
 
+### POST / - create new short url [valid target url]
+POST {{host}}/
+Content-Type: application/json
+
+{
+  "target_url": "https://www.linkedin.com"
+}
+
 ### POST / - create new short url [invalid target url]
 POST {{host}}/
 Content-Type: application/json
