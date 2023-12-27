@@ -6,10 +6,12 @@ import (
 )
 
 func SetRoutes(g *gin.Engine) {
-	g.GET("/health", func(ctx *gin.Context) {
-		ctx.Status(http.StatusOK)
-	})
+	g.GET("/health", HealthCheck)
 
 	g.POST("/", CreateShortURL)
 	g.GET("/:code", RedirectToTargetURL)
+}
+
+func HealthCheck(ctx *gin.Context) {
+	ctx.Status(http.StatusOK)
 }
