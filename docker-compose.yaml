@@ -1,6 +1,16 @@
 version: "3.9"
 
 services:
+  api:
+    container_name: urlshortener_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:3000"
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: postgres:15.2-alpine3.17
     container_name: urlshortener_db
@@ -18,13 +28,18 @@ services:
       interval: 3s
       timeout: 5s
       retries: 5
-  api:
-    container_name: urlshortener_api
-    build:
-      context: .
-      dockerfile: Dockerfile
+  live_reload:
+    container_name: urlshortener_live_reload
+    image: cosmtrek/air:v1.49.0
+    # must be the same of mapped value
+    working_dir: /app
     ports:
       - "3000:3000"
+    volumes:
+      - ./:/app
+    healthcheck:
+      # port must be the same as the api container
+      test: curl -fsS localhost:3000/health
     depends_on:
       db:
         condition: service_healthy
