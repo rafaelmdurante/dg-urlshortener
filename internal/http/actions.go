@@ -62,10 +62,5 @@ func RedirectToTargetURL(ctx *gin.Context) {
 		return
 	}
 
-	//
-	//ctx.JSON(http.StatusPermanentRedirect, gin.H{
-	//	// return redirection to target url
-	//	"Location": url.TargetURL,
-	//})
 	ctx.Redirect(http.StatusMovedPermanently, url.TargetURL)
 }
