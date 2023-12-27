@@ -21,7 +21,7 @@ type RepositoryPostgres struct {
 func (r *RepositoryPostgres) Insert(ctx context.Context, u internal.ShortenedURL) (internal.ShortenedURL, error) {
 	err := r.Conn.QueryRow(
 		ctx,
-		"INSERT INTO short_url (target_url) VALUES ($1) RETURNING id, target_url, url_code, created_at",
+		"INSERT INTO url (target_url) VALUES ($1) RETURNING id, target_url, url_code, created_at",
 		u.TargetURL,
 	).Scan(&u.ID, &u.TargetURL, &u.URLCode, &u.CreatedAt)
 
@@ -35,7 +35,7 @@ func (r *RepositoryPostgres) Insert(ctx context.Context, u internal.ShortenedURL
 func (r *RepositoryPostgres) UpdateURLCode(ctx context.Context, u internal.ShortenedURL) (internal.ShortenedURL, error) {
 	err := r.Conn.QueryRow(
 		ctx,
-		"UPDATE short_url SET url_code = $1 WHERE id = $2 RETURNING id, target_url, url_code, created_at",
+		"UPDATE url SET url_code = $1 WHERE id = $2 RETURNING id, target_url, url_code, created_at",
 		u.URLCode,
 		u.ID,
 	).Scan(&u.ID, &u.TargetURL, &u.URLCode, &u.CreatedAt)
@@ -51,7 +51,7 @@ func (r *RepositoryPostgres) FindOneByID(ctx context.Context, id int) (internal.
 	u := internal.ShortenedURL{}
 	err := r.Conn.QueryRow(
 		ctx,
-		"SELECT id, target_url FROM short_url WHERE id = $1",
+		"SELECT id, target_url FROM url WHERE id = $1",
 		id,
 	).Scan(&u.ID, &u.TargetURL)
 
