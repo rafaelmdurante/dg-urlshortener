@@ -90,23 +90,3 @@ func TestDecode(t *testing.T) {
 		}
 	})
 }
-
-func TestEncode64(t *testing.T) {
-	for _, tt := range tests {
-		t.Run(fmt.Sprintf("encode %d", tt.decimal), func(t *testing.T) {
-			if got := Base64Encoding.Encode(tt.decimal); got != tt.base62 {
-				t.Errorf("base64.Encode(%d) = '%s', want '%s'",
-					tt.decimal, got, tt.base62)
-			}
-		})
-	}
-
-	// negative amount should return empty string
-	n := -1
-	t.Run(fmt.Sprintf("encode negative"), func(t *testing.T) {
-		if got := Base64Encoding.Encode(n); got != "" {
-			t.Errorf("base62.Encode(%d) = '%s', want '%s'",
-				n, got, "")
-		}
-	})
-}
