@@ -11,7 +11,7 @@ POST {{host}}/
 Content-Type: application/json
 
 {
-  "target_url": "https://www.linkedin.com"
+  "target_url": "https://www.youtube.com/@Filhodanuvem"
 }
 
 ### POST / - create new short url [invalid target url]

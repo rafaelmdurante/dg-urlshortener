@@ -1,10 +1,10 @@
-package shorturl
+package url
 
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/rafaelmdurante/devgym-urlshortener/internal"
-	"github.com/rafaelmdurante/devgym-urlshortener/internal/base62"
 )
 
 var (
@@ -19,42 +19,45 @@ type Service struct {
 	Repository Repository
 }
 
-func (s Service) Create(ctx context.Context, u internal.ShortenedURL) (internal.ShortenedURL, error) {
-	if u.TargetURL == "" {
-		return internal.ShortenedURL{}, ErrTargetURLEmpty
+func (s Service) Create(ctx context.Context, input internal.URL) (internal.URL, error) {
+	if input.TargetURL == "" {
+		return internal.URL{}, ErrTargetURLEmpty
 	}
 
-	if u.URLCode != "" {
-		return internal.ShortenedURL{}, ErrShortURLAlreadyExists
+	if input.URLCode != "" {
+		return internal.URL{}, ErrShortURLAlreadyExists
 	}
 
 	// checks if uri is valid
-	if valid, err := u.IsURLValid(); !valid && err != nil {
-		return internal.ShortenedURL{}, err
+	if valid, err := input.IsURLValid(); !valid && err != nil {
+		return internal.URL{}, err
 	}
 
 	// creates a row with empty url_code, ideally this step would be 'get valid id' from an id service, for instance
 	// alternatively, if postgres could provide the next id number and reserve it, that would be awesome too
-	r, err := s.Repository.Insert(ctx, u)
+	u, err := s.Repository.Insert(ctx, input)
 	if err != nil {
-		return internal.ShortenedURL{}, err
+		return internal.URL{}, err
 	}
+
+	fmt.Sprintln("going to create")
 
 	// updates the empty url_code from step above
-	return s.Repository.UpdateURLCode(ctx, r.EncodeURL(r.ID))
+	return s.Repository.UpdateURLCode(ctx, u.EncodeURL())
 }
 
-func (s Service) FindOneByCode(ctx context.Context, code string) (internal.ShortenedURL, error) {
+func (s Service) FindOneByCode(ctx context.Context, code string) (internal.URL, error) {
 	if code == "" {
-		return internal.ShortenedURL{}, ErrCodeIsEmpty
+		return internal.URL{}, ErrCodeIsEmpty
 	}
 
-	id := base62.Decode(code)
+	var u internal.URL
+	var err error
 
-	u, err := s.Repository.FindOneByID(ctx, id)
+	u, err = s.Repository.FindOneByID(ctx, u.DecodeURL(code).ID)
 
 	if err != nil {
-		return internal.ShortenedURL{}, err
+		return internal.URL{}, err
 	}
 
 	return u, nil

@@ -54,7 +54,7 @@ var tests = []struct {
 func TestEncode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("encode %d", tt.decimal), func(t *testing.T) {
-			if got := Encode(tt.decimal); got != tt.base62 {
+			if got := StdEncoding.Encode(tt.decimal); got != tt.base62 {
 				t.Errorf("base62.Encode(%d) = '%s', want '%s'",
 					tt.decimal, got, tt.base62)
 			}
@@ -64,7 +64,7 @@ func TestEncode(t *testing.T) {
 	// negative amount should return empty string
 	n := -1
 	t.Run(fmt.Sprintf("encode negative"), func(t *testing.T) {
-		if got := Encode(n); got != "" {
+		if got := StdEncoding.Encode(n); got != "" {
 			t.Errorf("base62.Encode(%d) = '%s', want '%s'",
 				n, got, "")
 		}
@@ -74,7 +74,7 @@ func TestEncode(t *testing.T) {
 func TestDecode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("decode %s", tt.base62), func(t *testing.T) {
-			if got := Decode(tt.base62); got != tt.decimal {
+			if got := StdEncoding.Decode(tt.base62); got != tt.decimal {
 				t.Errorf("base62.Decode(%s) = '%d', want '%d'",
 					tt.base62, got, tt.decimal)
 			}
@@ -84,9 +84,29 @@ func TestDecode(t *testing.T) {
 	// empty string should return 0
 	s := ""
 	t.Run(fmt.Sprintf("decode empty string"), func(t *testing.T) {
-		if got := Decode(s); got != 0 {
+		if got := StdEncoding.Decode(s); got != 0 {
 			t.Errorf("base62.Decode(%s) = '%d', want '%d'",
 				s, got, 0)
+		}
+	})
+}
+
+func TestEncode64(t *testing.T) {
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("encode %d", tt.decimal), func(t *testing.T) {
+			if got := Base64Encoding.Encode(tt.decimal); got != tt.base62 {
+				t.Errorf("base64.Encode(%d) = '%s', want '%s'",
+					tt.decimal, got, tt.base62)
+			}
+		})
+	}
+
+	// negative amount should return empty string
+	n := -1
+	t.Run(fmt.Sprintf("encode negative"), func(t *testing.T) {
+		if got := Base64Encoding.Encode(n); got != "" {
+			t.Errorf("base62.Encode(%d) = '%s', want '%s'",
+				n, got, "")
 		}
 	})
 }

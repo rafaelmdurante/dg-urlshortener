@@ -5,25 +5,25 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rafaelmdurante/devgym-urlshortener/internal"
 	"github.com/rafaelmdurante/devgym-urlshortener/internal/database"
-	"github.com/rafaelmdurante/devgym-urlshortener/internal/shorturl"
+	"github.com/rafaelmdurante/devgym-urlshortener/internal/url"
 	"net/http"
 	"time"
 )
 
-var service shorturl.Service
+var service url.Service
 
 func GetErrorMessage(err error) gin.H {
 	return gin.H{"error": err.Error()}
 }
 
 func Configure() {
-	service = shorturl.Service{
-		Repository: &shorturl.RepositoryPostgres{Conn: database.Connection},
+	service = url.Service{
+		Repository: &url.RepositoryPostgres{Conn: database.Connection},
 	}
 }
 
 func CreateShortURL(ctx *gin.Context) {
-	var shortURL internal.ShortenedURL
+	var shortURL internal.URL
 
 	if err := ctx.BindJSON(&shortURL); err != nil {
 		ctx.JSON(http.StatusBadRequest, GetErrorMessage(err))
@@ -50,7 +50,7 @@ func RedirectToTargetURL(ctx *gin.Context) {
 
 	if code == "" {
 		ctx.JSON(http.StatusNotFound, gin.H{
-			"error": shorturl.ErrInvalidURLCode,
+			"error": url.ErrInvalidURLCode,
 		})
 	}
 
