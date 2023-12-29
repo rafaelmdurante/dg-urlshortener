@@ -39,6 +39,6 @@ To run all the tests:
 make test
 ```
 
-[devgym]: https://devgym.com.br
+[devgym]: https://app.devgym.com.br/challenges/3ecd0771-981d-44dc-9eee-5ec69791a745
 [ytgoapi]: https://github.com/filhodanuvem/ytgoapi/tree/main
 [system-design-interview]: https://www.amazon.com/System-Design-Interview-insiders-Second/dp/B08CMF2CQF
